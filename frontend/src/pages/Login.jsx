@@ -26,7 +26,10 @@ export default function Login() {
       });
       const data = await res.json();
       
-      if (!res.ok) throw new Error(data.message || 'Authentication failed');
+      if (!res.ok) {
+        console.error('Authentication Error Details:', data);
+        throw new Error(data.error || data.message || 'Authentication failed');
+      }
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
