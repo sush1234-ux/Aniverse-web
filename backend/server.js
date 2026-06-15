@@ -1,9 +1,11 @@
 require('dotenv').config();
 const dns = require('dns');
-try {
-  dns.setServers(['8.8.8.8', '1.1.1.1']);
-} catch (err) {
-  console.warn('DNS server override failed, using default system resolver:', err.message);
+if (!process.env.VERCEL) {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+  } catch (err) {
+    console.warn('DNS server override failed, using default system resolver:', err.message);
+  }
 }
 const express = require('express');
 const http = require('http');
@@ -92,16 +94,14 @@ async function generateContentWithFallback(config) {
   return null;
 }
 
-let isConnected = false;
 async function connectToDatabase() {
-  if (isConnected) {
+  if (mongoose.connection && mongoose.connection.readyState === 1) {
     return;
   }
   const db = await mongoose.connect(MONGODB_URI, {
     serverSelectionTimeoutMS: 5000,
     socketTimeoutMS: 45000
   });
-  isConnected = db.connections[0].readyState;
   console.log('MongoDB connected successfully.');
 
   try {
