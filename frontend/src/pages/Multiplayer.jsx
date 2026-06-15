@@ -24,7 +24,7 @@ const playCyberBeep = (freq = 800, type = 'sine', duration = 0.08) => {
 };
 
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 
 export default function Multiplayer() {
   const navigate = useNavigate();

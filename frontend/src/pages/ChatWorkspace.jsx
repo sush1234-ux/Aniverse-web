@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 import { Send, User as UserIcon, Users, Hash, ShieldAlert, Sparkles, MessageCircle, LogIn } from 'lucide-react';
 
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 
 export default function ChatWorkspace() {
   const location = useLocation();
