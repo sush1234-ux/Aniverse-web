@@ -3,6 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { Send, User as UserIcon, Users, Hash, ShieldAlert, Sparkles, MessageCircle, LogIn } from 'lucide-react';
 
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://backend-drab-seven-84.vercel.app';
+
 export default function ChatWorkspace() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -35,7 +38,7 @@ export default function ChatWorkspace() {
   // 1. Fetch available characters and fanclubs once on mount/auth state change
   useEffect(() => {
     // Fetch available characters
-    fetch('http://localhost:5000/api/characters')
+    fetch(`${API_URL}/api/characters`)
       .then(res => res.json())
       .then(data => {
         setCharacters(data);
@@ -52,7 +55,7 @@ export default function ChatWorkspace() {
       .catch(err => console.log('Error loading characters:', err));
 
     // Fetch community channels
-    fetch('http://localhost:5000/api/fanclubs')
+    fetch(`${API_URL}/api/fanclubs`)
       .then(res => res.json())
       .then(data => {
         setFanclubs(data);
@@ -81,7 +84,7 @@ export default function ChatWorkspace() {
     if (!token || !currentRoom?.id) return;
 
     // Connect Socket.io client
-    socketRef.current = io('http://localhost:5000');
+    socketRef.current = io(API_URL);
 
     // Sync affinity update events
     if (user && user.id) {
@@ -154,7 +157,7 @@ export default function ChatWorkspace() {
     setTypingIndicator(null);
 
     if (type === 'fanclub') {
-      fetch(`http://localhost:5000/api/messages/${id}`)
+      fetch(`${API_URL}/api/messages/${id}`)
         .then(res => res.json())
         .then(data => setMessages(data))
         .catch(err => console.log('Error loading history:', err));
@@ -178,7 +181,7 @@ export default function ChatWorkspace() {
     const endpoint = authMode === 'login' ? 'login' : 'signup';
 
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/${endpoint}`, {
+      const res = await fetch(`${API_URL}/api/auth/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(authForm)
@@ -249,7 +252,7 @@ export default function ChatWorkspace() {
   const joinClub = async (clubId) => {
     if (!token) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/fanclubs/${clubId}/join`, {
+      const res = await fetch(`${API_URL}/api/fanclubs/${clubId}/join`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

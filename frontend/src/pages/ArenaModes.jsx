@@ -22,6 +22,9 @@ const playCyberBeep = (freq = 800, type = 'sine', duration = 0.08) => {
   } catch (e) {}
 };
 
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://backend-drab-seven-84.vercel.app';
+
 export default function ArenaModes() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -83,7 +86,7 @@ export default function ArenaModes() {
 
   useEffect(() => {
     // Load top matrix profiles quietly
-    fetch('http://localhost:5000/api/archetype-matrix')
+    fetch(`${API_URL}/api/archetype-matrix`)
       .then(res => res.json())
       .then(data => {
         if (data && data.data) {
@@ -211,7 +214,7 @@ export default function ArenaModes() {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/arena/process-turn', {
+      const res = await fetch(`${API_URL}/api/arena/process-turn`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

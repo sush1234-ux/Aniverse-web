@@ -23,6 +23,9 @@ const playCyberBeep = (freq = 800, type = 'sine', duration = 0.08) => {
   } catch (e) {}
 };
 
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://backend-drab-seven-84.vercel.app';
+
 export default function Multiplayer() {
   const navigate = useNavigate();
   
@@ -49,7 +52,7 @@ export default function Multiplayer() {
     if (!token) return;
 
     // Connect to backend sockets
-    socketRef.current = io('http://localhost:5000');
+    socketRef.current = io(API_URL);
 
     // Register player in lobby pool
     socketRef.current.emit('register_player', {

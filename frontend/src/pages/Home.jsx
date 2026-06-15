@@ -40,6 +40,9 @@ const playCyberBeep = (freq = 800, type = 'sine', duration = 0.08) => {
   }
 };
 
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://backend-drab-seven-84.vercel.app';
+
 export default function Home() {
   const navigate = useNavigate();
   const [characters, setCharacters] = useState([]);
@@ -70,7 +73,7 @@ export default function Home() {
     }
 
     // Fetch top characters from backend proxy quietly
-    fetch('http://localhost:5000/api/archetype-matrix')
+    fetch(`${API_URL}/api/archetype-matrix`)
       .then(res => {
         if (!res.ok) throw new Error('API limit');
         return res.json();
@@ -142,7 +145,7 @@ export default function Home() {
     playCyberBeep(600, 'sawtooth', 0.15);
 
     try {
-      const res = await fetch('http://localhost:5000/api/mood-match', {
+      const res = await fetch(`${API_URL}/api/mood-match`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -244,7 +247,7 @@ export default function Home() {
   const handleOpenPortal = async (char) => {
     playCyberBeep(1400, 'sine', 0.1);
     try {
-      const res = await fetch('http://localhost:5000/api/characters/sync', {
+      const res = await fetch(`${API_URL}/api/characters/sync`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

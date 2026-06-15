@@ -4,6 +4,9 @@ import { Sparkles, Trophy, Shield, Play, HelpCircle, Activity } from 'lucide-rea
 const SHONEN_HYPE_NAMES = ['Luffy', 'Goku', 'Naruto', 'Zoro', 'Saitama', 'Gon', 'Sukuna', 'Edward'];
 const DARK_ANTIHERO_NAMES = ['Levi', 'Lelouch', 'Light', 'Lawliet', 'Gojo', 'Itachi', 'Sasuke', 'Kaneki'];
 
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://backend-drab-seven-84.vercel.app';
+
 export default function DebateArena() {
   const [characters, setCharacters] = useState([]);
   const [contenderA, setContenderA] = useState(null); // Selected Jikan character A
@@ -27,7 +30,7 @@ export default function DebateArena() {
 
   // Fetch characters on mount
   useEffect(() => {
-    fetch('http://localhost:5000/api/archetype-matrix')
+    fetch(`${API_URL}/api/archetype-matrix`)
       .then(res => res.json())
       .then(data => {
         if (data && data.data) {
@@ -92,7 +95,7 @@ export default function DebateArena() {
 
     try {
       // 1. Sync Contender A with database
-      const syncARes = await fetch('http://localhost:5000/api/characters/sync', {
+      const syncARes = await fetch(`${API_URL}/api/characters/sync`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -106,7 +109,7 @@ export default function DebateArena() {
       const dbCharA = await syncARes.json();
 
       // 2. Sync Contender B with database
-      const syncBRes = await fetch('http://localhost:5000/api/characters/sync', {
+      const syncBRes = await fetch(`${API_URL}/api/characters/sync`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -120,7 +123,7 @@ export default function DebateArena() {
       const dbCharB = await syncBRes.json();
 
       // 3. Request debate dialogue
-      const debateRes = await fetch('http://localhost:5000/api/debate', {
+      const debateRes = await fetch(`${API_URL}/api/debate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

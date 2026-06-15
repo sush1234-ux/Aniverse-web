@@ -4,6 +4,9 @@ import { Film, CheckCircle, Sparkles, Play } from 'lucide-react';
 const SHONEN_HYPE_NAMES = ['Luffy', 'Goku', 'Naruto', 'Zoro', 'Saitama', 'Gon', 'Sukuna', 'Edward'];
 const DARK_ANTIHERO_NAMES = ['Levi', 'Lelouch', 'Light', 'Lawliet', 'Gojo', 'Itachi', 'Sasuke', 'Kaneki'];
 
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://backend-drab-seven-84.vercel.app';
+
 export default function MovieEngine() {
   const [characters, setCharacters] = useState([]);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
@@ -22,7 +25,7 @@ export default function MovieEngine() {
 
   // Fetch characters directly
   useEffect(() => {
-    fetch('http://localhost:5000/api/archetype-matrix')
+    fetch(`${API_URL}/api/archetype-matrix`)
       .then(res => res.json())
       .then(data => {
         if (data && data.data) {
@@ -73,7 +76,7 @@ export default function MovieEngine() {
 
     try {
       // 1. Sync Jikan character with MongoDB to ensure character exists
-      const syncRes = await fetch('http://localhost:5000/api/characters/sync', {
+      const syncRes = await fetch(`${API_URL}/api/characters/sync`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -89,7 +92,7 @@ export default function MovieEngine() {
       const dbId = syncedChar._id;
 
       // 2. Fetch film recommendations using MongoDB character ID
-      const res = await fetch('http://localhost:5000/api/recommendations', {
+      const res = await fetch(`${API_URL}/api/recommendations`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ characterId: dbId })

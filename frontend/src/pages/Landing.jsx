@@ -22,6 +22,9 @@ const playCyberBeep = (freq = 800, type = 'sine', duration = 0.08) => {
   } catch (e) {}
 };
 
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://backend-drab-seven-84.vercel.app';
+
 export default function Landing() {
   const navigate = useNavigate();
   
@@ -58,7 +61,7 @@ export default function Landing() {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/fanclubs');
+      const res = await fetch(`${API_URL}/api/fanclubs`);
       const data = await res.json();
       
       let targetClubName = '';
@@ -150,7 +153,7 @@ export default function Landing() {
     const endpoint = authMode === 'login' ? 'login' : 'signup';
 
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/${endpoint}`, {
+      const res = await fetch(`${API_URL}/api/auth/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

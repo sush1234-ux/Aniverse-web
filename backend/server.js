@@ -42,6 +42,17 @@ const JWT_SECRET = process.env.JWT_SECRET || 'aniverse_secret';
 app.use(cors());
 app.use(express.json());
 
+// Ensure Database is connected before routing requests (Serverless optimization)
+app.use(async (req, res, next) => {
+  try {
+    await connectToDatabase();
+    next();
+  } catch (err) {
+    console.error('Database connection middleware error:', err.message);
+    res.status(500).json({ message: 'Database connection failed', error: err.message });
+  }
+});
+
 // Mount Arena computational routes
 app.use('/api/arena', require('./routes/arena'));
 
@@ -81,15 +92,33 @@ async function generateContentWithFallback(config) {
   return null;
 }
 
-// Connect to MongoDB
-mongoose.connect(MONGODB_URI)
-  .then(() => {
-    console.log('MongoDB connected successfully.');
-    seedDatabase();
-  })
-  .catch(err => {
-    console.error('MongoDB connection error:', err);
+let isConnected = false;
+async function connectToDatabase() {
+  if (isConnected) {
+    return;
+  }
+  const db = await mongoose.connect(MONGODB_URI, {
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000
   });
+  isConnected = db.connections[0].readyState;
+  console.log('MongoDB connected successfully.');
+
+  try {
+    const charCount = await Character.countDocuments();
+    if (charCount === 0) {
+      console.log('Database empty. Running seed database script...');
+      await seedDatabase();
+    } else {
+      console.log('Database already contains characters. Skipping seeding.');
+    }
+  } catch (err) {
+    console.error('Error checking seed requirement:', err.message);
+  }
+}
+
+// Trigger initial connection on startup
+connectToDatabase().catch(err => console.error('Initial MongoDB connection error:', err.message));
 
 // --- JWT Middleware ---
 const authenticateToken = (req, res, next) => {
@@ -1782,7 +1811,12 @@ async function seedDatabase() {
   }
 }
 
-// Start Server listening
-server.listen(PORT, () => {
-  console.log(`AniVerse AI Backend Engine running on Port ${PORT}`);
-});
+// Start Server listening (only if not running as a Vercel serverless function)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  server.listen(PORT, () => {
+    console.log(`AniVerse AI Backend Engine running on Port ${PORT}`);
+  });
+}
+
+// Export Express app for Vercel serverless wrapper
+module.exports = app;

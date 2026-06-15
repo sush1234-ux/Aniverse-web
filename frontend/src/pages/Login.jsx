@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogIn, UserPlus, ShieldAlert } from 'lucide-react';
 
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://backend-drab-seven-84.vercel.app';
+
 export default function Login() {
   const navigate = useNavigate();
   const [authMode, setAuthMode] = useState('login'); // 'login' or 'signup'
@@ -16,7 +19,7 @@ export default function Login() {
     const endpoint = authMode === 'login' ? 'login' : 'signup';
 
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/${endpoint}`, {
+      const res = await fetch(`${API_URL}/api/auth/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

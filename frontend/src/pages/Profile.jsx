@@ -31,6 +31,9 @@ const PRESET_AVATARS = [
   { name: 'Mech Pilot', url: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=150' }
 ];
 
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://backend-drab-seven-84.vercel.app';
+
 export default function Profile() {
   const navigate = useNavigate();
   
@@ -67,13 +70,13 @@ export default function Profile() {
     }
 
     // 2. Fetch all characters to match resonance metrics
-    fetch('http://localhost:5000/api/characters')
+    fetch(`${API_URL}/api/characters`)
       .then(res => res.json())
       .then(data => setCharacters(data))
       .catch(err => console.log('Error loading characters for metrics:', err));
 
     // 3. Fetch all community fanclubs
-    fetch('http://localhost:5000/api/fanclubs')
+    fetch(`${API_URL}/api/fanclubs`)
       .then(res => res.json())
       .then(data => setFanclubs(data))
       .catch(err => console.log('Error loading fanclubs for profile:', err));
