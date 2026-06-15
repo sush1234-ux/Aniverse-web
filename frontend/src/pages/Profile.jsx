@@ -32,7 +32,7 @@ const PRESET_AVATARS = [
 ];
 
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://backend-drab-seven-84.vercel.app';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function Profile() {
   const navigate = useNavigate();

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { LogIn, UserPlus, ShieldAlert } from 'lucide-react';
 
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://backend-drab-seven-84.vercel.app';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function Login() {
   const navigate = useNavigate();

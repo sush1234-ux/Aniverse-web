@@ -23,7 +23,7 @@ const playCyberBeep = (freq = 800, type = 'sine', duration = 0.08) => {
 };
 
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://backend-drab-seven-84.vercel.app';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function Landing() {
   const navigate = useNavigate();
